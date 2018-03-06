@@ -1,4 +1,4 @@
-package com.almomento.pedidos.view;
+package com.paradorlarenta.pedidos.view;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.almomento.pedidos.R;
-import com.almomento.pedidos.callbacks.CallBackItemProducto;
-import com.almomento.pedidos.models.ProductoModel;
+import com.paradorlarenta.pedidos.R;
+import com.paradorlarenta.pedidos.callbacks.CallBackItemProducto;
+import com.paradorlarenta.pedidos.models.ProductoModel;
 
 import java.util.List;
 
@@ -76,10 +76,17 @@ public class RVAdapterItemProducto extends RecyclerView.Adapter<RVAdapterItemPro
     @Override
     public void onBindViewHolder(final ProductosViewHolder customViewHolder, int i) {
 
-        final ProductoModel soportesModel = productoModelList.get(i);
+        final ProductoModel productoModel = productoModelList.get(i);
 
-        customViewHolder.txtNombreProducto.setText(soportesModel.getNombreProducto());
-        customViewHolder.txtValorProducto.setText(soportesModel.getValorProducto().toString());
+        customViewHolder.txtNombreProducto.setText(productoModel.getNombreProducto());
+        customViewHolder.txtValorProducto.setText(productoModel.getValorProducto().toString());
+
+        customViewHolder.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callBackItemProducto.OnCallbackTouchContainer(productoModel);
+            }
+        });
 
     }
 

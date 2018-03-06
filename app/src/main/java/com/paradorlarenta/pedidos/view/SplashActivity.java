@@ -1,4 +1,4 @@
-package com.almomento.pedidos.view;
+package com.paradorlarenta.pedidos.view;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.almomento.pedidos.R;
+import com.paradorlarenta.pedidos.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

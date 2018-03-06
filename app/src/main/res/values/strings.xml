@@ -1,6 +1,9 @@
 <resources>
-    <string name="app_name">Pedidos</string>
+    <string name="app_name">PARADOR LA RENTA</string>
     <string name="str_nombre_producto">Nombre de un prodcuto muy largo y sabroso</string>
     <string name="str_valor_producto">$ 20.000</string>
     <string name="str_productos">Productos</string>
+    <string name="str_cantidad">Cantidad</string>
+    <string name="str_agregar">Agregar</string>
+    <string name="str_precio">Precio</string>
 </resources>

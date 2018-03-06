@@ -1,4 +1,4 @@
-package com.almomento.pedidos;
+package com.paradorlarenta.pedidos;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
