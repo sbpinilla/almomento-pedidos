@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,7 +15,10 @@ import com.paradorlarenta.pedidos.R;
 import com.paradorlarenta.pedidos.callbacks.CallBackItemProducto;
 import com.paradorlarenta.pedidos.models.ProductoModel;
 
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,7 +30,7 @@ import butterknife.ButterKnife;
 
 public class RVAdapterItemProducto extends RecyclerView.Adapter<RVAdapterItemProducto.ProductosViewHolder> {
 
-    private List<ProductoModel> productoModelList;
+    public List<ProductoModel> productoModelList;
     private Context mContext;
     private CallBackItemProducto callBackItemProducto;
 
@@ -34,6 +39,15 @@ public class RVAdapterItemProducto extends RecyclerView.Adapter<RVAdapterItemPro
         this.productoModelList = productoModelList;
         this.mContext = mContext;
         this.callBackItemProducto = callBackItemProducto;
+
+
+
+    }
+
+    public void setFilter(List<ProductoModel> newList){
+        productoModelList = new ArrayList<>();
+        productoModelList.addAll(newList);
+        notifyDataSetChanged();
     }
 
 
@@ -55,6 +69,7 @@ public class RVAdapterItemProducto extends RecyclerView.Adapter<RVAdapterItemPro
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+
     }
 
 
@@ -78,8 +93,10 @@ public class RVAdapterItemProducto extends RecyclerView.Adapter<RVAdapterItemPro
 
         final ProductoModel productoModel = productoModelList.get(i);
 
+        NumberFormat defaultFormat = NumberFormat.getCurrencyInstance();
+
         customViewHolder.txtNombreProducto.setText(productoModel.getNombreProducto());
-        customViewHolder.txtValorProducto.setText(productoModel.getValorProducto().toString());
+        customViewHolder.txtValorProducto.setText(("$ "+String.format( new Locale("es_CO"),"%,.2f", productoModel.getValorProducto())));
 
         customViewHolder.container.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,5 +111,7 @@ public class RVAdapterItemProducto extends RecyclerView.Adapter<RVAdapterItemPro
     public int getItemCount() {
         return (null != productoModelList ? productoModelList.size() : 0);
     }
+
+
 
 }
