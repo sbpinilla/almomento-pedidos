@@ -6,4 +6,7 @@
     <string name="str_cantidad">Cantidad</string>
     <string name="str_agregar">Agregar</string>
     <string name="str_precio">Precio</string>
+    <string name="str_search">Buscar</string>
+    <string name="search_hint">Buscar producto</string>
+    <string name="str_total">Total : </string>
 </resources>

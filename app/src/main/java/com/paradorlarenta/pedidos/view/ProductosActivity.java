@@ -10,12 +10,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.paradorlarenta.pedidos.R;
 import com.paradorlarenta.pedidos.callbacks.CallBackItemProducto;
 import com.paradorlarenta.pedidos.models.PedidoModel;
@@ -27,6 +29,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -48,6 +51,11 @@ public class ProductosActivity extends AppCompatActivity {
     @BindString(R.string.str_productos)
     String strTitulos;
 
+    @BindView(R.id.search_view)
+    MaterialSearchView searchView;
+
+    //MaterialSearchView searchView = (MaterialSearchView) findViewById(R.id.search_view);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +64,65 @@ public class ProductosActivity extends AppCompatActivity {
         activity = this;
         productoModelList = new ArrayList<>();
         setupToolbar(strTitulos);
+        setupSearchView();
+
+    }
+
+    private void setupSearchView() {
+
+
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //Do some magic
+
+                Log.d(LOG_ACTIVITY, "setOnQueryTextListener");
+                Log.d(LOG_ACTIVITY, "setOnQueryTextListener:" + query);
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //Do some magic
+
+                Log.d(LOG_ACTIVITY, "onQueryTextChange");
+                Log.d(LOG_ACTIVITY, "onQueryTextChange:" + newText);
+
+
+                newText = newText.toLowerCase();
+                ArrayList<ProductoModel> newList = new ArrayList<>();
+
+                for (ProductoModel channel : productoModelList) {
+                    String channelName = channel.getNombreProducto().toLowerCase();
+                    if (channelName.contains(newText)) {
+                        newList.add(channel);
+                    }
+                }
+                adapter.setFilter(newList);
+
+                return false;
+            }
+        });
+
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+                //Do some magic
+                Log.d(LOG_ACTIVITY, "onSearchViewShown");
+                //adapter.getFilter().filter("");
+                updateListProductosModel();
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                //Do some magic
+                Log.d(LOG_ACTIVITY, "onSearchViewClosed");
+                //adapter.getFilter().filter("");
+                updateListProductosModel();
+            }
+        });
+
     }
 
     public void setupToolbar(String tittle) {
@@ -91,7 +158,7 @@ public class ProductosActivity extends AppCompatActivity {
                 final TextView txtCantidad = view.findViewById(R.id.cantidad_dialog_producto);
                 TextView txtValorProducto = view.findViewById(R.id.precio_dialog_producto);
 
-                txtValorProducto.setText(productoModel.getValorProducto().toString());
+                txtValorProducto.setText(("$ "+String.format( new Locale("es_CO"),"%,.2f", productoModel.getValorProducto())));
 
                 SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
                 Gson gson = new Gson();
@@ -249,7 +316,7 @@ public class ProductosActivity extends AppCompatActivity {
 
 
         List<ProductoModel> lisTem = new ArrayList<>();
-
+        productoModelList = new ArrayList<>();
         ProductoModel pm1 = new ProductoModel(1, "Producto 1", 20000.0, "");
         ProductoModel pm2 = new ProductoModel(2, "Producto 2", 10000.0, "");
         ProductoModel pm3 = new ProductoModel(3, "Producto 3", 30000.0, "");
@@ -262,6 +329,7 @@ public class ProductosActivity extends AppCompatActivity {
         lisTem.add(pm4);
         lisTem.add(pm5);
 
+        productoModelList = lisTem;
         adapter.updateRVAdapterItemProducto(lisTem);
 
     }
@@ -287,20 +355,23 @@ public class ProductosActivity extends AppCompatActivity {
             Type type = new TypeToken<List<PedidoModel>>() {
             }.getType();
             List<PedidoModel> pedidoModels = gson.fromJson(dataCarrito, type);
-            carrito= pedidoModels.size();
+            carrito = pedidoModels.size();
         }
 
 
         // Create a condition (hide it if the count == 0)
-        if (carrito > 0) {
-            BadgeCounter.update(this,
-                    menu.findItem(R.id.menu_carrito_compras),
-                    R.drawable.ic_action_shopping_cart,
-                    BadgeCounter.BadgeColor.RED,
-                    carrito);
-        } else {
-             BadgeCounter.hide(menu.findItem(R.id.menu_carrito_compras));
-        }
+        //  if (carrito > 0) {
+        BadgeCounter.update(this,
+                menu.findItem(R.id.menu_carrito_compras),
+                R.drawable.ic_action_shopping_cart,
+                BadgeCounter.BadgeColor.RED,
+                carrito);
+        //} else {
+        // BadgeCounter.hide(menu.findItem(R.id.menu_carrito_compras));
+        //}
+
+        MenuItem item = menu.findItem(R.id.action_search);
+        searchView.setMenuItem(item);
 
         return true;
     }
