@@ -2,6 +2,7 @@ package com.paradorlarenta.pedidos.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -29,7 +31,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -64,6 +65,7 @@ public class ProductosActivity extends AppCompatActivity {
         activity = this;
         productoModelList = new ArrayList<>();
         setupToolbar(strTitulos);
+        setupRVProductos();
         setupSearchView();
 
     }
@@ -112,6 +114,8 @@ public class ProductosActivity extends AppCompatActivity {
                 Log.d(LOG_ACTIVITY, "onSearchViewShown");
                 //adapter.getFilter().filter("");
                 updateListProductosModel();
+                toolbar.setVisibility(View.GONE);
+                searchView.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -120,6 +124,8 @@ public class ProductosActivity extends AppCompatActivity {
                 Log.d(LOG_ACTIVITY, "onSearchViewClosed");
                 //adapter.getFilter().filter("");
                 updateListProductosModel();
+                searchView.setVisibility(View.GONE);
+                toolbar.setVisibility(View.VISIBLE);
             }
         });
 
@@ -129,7 +135,7 @@ public class ProductosActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(tittle);
-        setupRVProductos();
+
 
     }
 
@@ -146,7 +152,6 @@ public class ProductosActivity extends AppCompatActivity {
             @Override
             public void OnCallbackTouchContainer(final ProductoModel productoModel) {
 
-
                 final MaterialDialog dialog = new MaterialDialog.Builder(activity)
                         .title(productoModel.getNombreProducto())
                         .theme(Theme.LIGHT)
@@ -156,11 +161,16 @@ public class ProductosActivity extends AppCompatActivity {
                 View view = dialog.getCustomView();
 
                 final TextView txtCantidad = view.findViewById(R.id.cantidad_dialog_producto);
+                final EditText edtDescripcion = view.findViewById(R.id.edt_descripcion_dialog_producto);
+                Button btnQuitar = view.findViewById(R.id.btn_quitar_dialog_producto);
+
+
                 TextView txtValorProducto = view.findViewById(R.id.precio_dialog_producto);
 
-                txtValorProducto.setText(("$ "+String.format( new Locale("es_CO"),"%,.2f", productoModel.getValorProducto())));
+                txtValorProducto.setText(("$ "+String.format( "%,.2f", productoModel.getValorProducto())));
 
-                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences sharedPref = getSharedPreferences(
+                        "SharedPreferencesPedidos", Context.MODE_PRIVATE);
                 Gson gson = new Gson();
                 String dataCarrito = sharedPref.getString("dataCarrito", "");
                 Log.d(LOG_ACTIVITY, "dataCarrito : " + dataCarrito);
@@ -171,21 +181,26 @@ public class ProductosActivity extends AppCompatActivity {
                     List<PedidoModel> pedidoModels = gson.fromJson(dataCarrito, type);
 
                     Boolean existe = false;
-                    PedidoModel productoModel1 = null;
+                    PedidoModel pedidoModel = null;
                     for (PedidoModel pm : pedidoModels) {
                         if (pm.getProductoModel().getIdProducto() == productoModel.getIdProducto()) {
                             existe = true;
-                            productoModel1 = pm;
+                            pedidoModel = pm;
 
                         }
                     }
 
                     if (existe) {
                         Log.d(LOG_ACTIVITY, "existe ");
-                        txtCantidad.setText("" + productoModel1.getCantidad());
+                        txtCantidad.setText("" + pedidoModel.getCantidad());
+                        edtDescripcion.setText(""+pedidoModel.getDescripcion() !=null ?pedidoModel.getDescripcion():"" );
+                        btnQuitar.setVisibility(View.VISIBLE);
+
                     } else {
                         Log.d(LOG_ACTIVITY, " no existe ");
                         txtCantidad.setText("1");
+                        edtDescripcion.setText("");
+                        btnQuitar.setVisibility(View.GONE);
                     }
 
                 } else {
@@ -199,6 +214,40 @@ public class ProductosActivity extends AppCompatActivity {
                 Button btnMenos = view.findViewById(R.id.btn_restar_dialog_producto);
                 Button btnAgregar = view.findViewById(R.id.btn_agregar_dialog_producto);
 
+
+                btnQuitar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        SharedPreferences sharedPref = getSharedPreferences(
+                                "SharedPreferencesPedidos", Context.MODE_PRIVATE);
+                        Gson gson = new Gson();
+                        String dataCarrito = sharedPref.getString("dataCarrito", "");
+                        Type type = new TypeToken<List<PedidoModel>>() {
+                        }.getType();
+                        List<PedidoModel> pedidoModels = gson.fromJson(dataCarrito, type);
+
+                        PedidoModel pmm = null ;
+                        for (PedidoModel pm : pedidoModels) {
+                            if (pm.getProductoModel().getIdProducto() == productoModel.getIdProducto()) {
+
+                                pmm = pm;
+                            }
+                        }
+                        pedidoModels.remove(pmm);
+                        String data = gson.toJson(pedidoModels);
+
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putString("dataCarrito", data);
+                        editor.commit();
+
+                        invalidateOptionsMenu();
+
+                        edtDescripcion.setText("");
+                        dialog.dismiss();
+
+                    }
+                });
 
                 btnMas.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -233,12 +282,15 @@ public class ProductosActivity extends AppCompatActivity {
 
                         int cantidad = Integer.parseInt(txtCantidad.getText().toString());
 
-                        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                        String  descripcion =  edtDescripcion.getText().toString();
+
+                        SharedPreferences sharedPref = getSharedPreferences(
+                                "SharedPreferencesPedidos", Context.MODE_PRIVATE);
                         Gson gson = new Gson();
 
                         String dataCarrito = sharedPref.getString("dataCarrito", "");
 
-                        PedidoModel pedidoModel = new PedidoModel(productoModel, cantidad);
+                        PedidoModel pedidoModel = new PedidoModel(descripcion,productoModel, cantidad);
 
 
                         if (dataCarrito.equals("")) {
@@ -271,6 +323,7 @@ public class ProductosActivity extends AppCompatActivity {
 
                             if (existe) {
                                 productoModel1.setCantidad(cantidad);
+                                productoModel1.setDescripcion(descripcion);
                             } else {
                                 pedidoModels.add(pedidoModel);
                             }
@@ -287,6 +340,8 @@ public class ProductosActivity extends AppCompatActivity {
 
                         dataCarrito = sharedPref.getString("dataCarrito", "");
                         invalidateOptionsMenu();
+
+                        edtDescripcion.setText("");
                         dialog.dismiss();
 
                         //log
@@ -338,16 +393,21 @@ public class ProductosActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        invalidateOptionsMenu();
         updateListProductosModel();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_pedidos, menu);
+        getMenuInflater().inflate(R.menu.menu_productos, menu);
 
         int carrito = 0;
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+
+        SharedPreferences sharedPref = this.getSharedPreferences(
+                "SharedPreferencesPedidos", Context.MODE_PRIVATE);
+
+
         Gson gson = new Gson();
         String dataCarrito = sharedPref.getString("dataCarrito", "");
 
@@ -374,6 +434,19 @@ public class ProductosActivity extends AppCompatActivity {
         searchView.setMenuItem(item);
 
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.menu_carrito_compras) {
+
+            startActivity( new Intent(this,PedidosActivity.class));
+
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }

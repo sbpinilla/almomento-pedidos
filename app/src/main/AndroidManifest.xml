@@ -21,7 +21,15 @@
         <activity
             android:name=".view.ProductosActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".view.PedidosActivity"></activity>
+
+        <activity android:name=".view.PedidosActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".view.ProductosActivity" >
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.ProductosActivity" />
+        </activity>
     </application>
 
 </manifest>

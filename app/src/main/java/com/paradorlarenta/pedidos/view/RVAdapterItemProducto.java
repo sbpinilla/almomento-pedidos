@@ -24,7 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by Nelsy Acuña on 05/03/2018.
+ * Created by  on 05/03/2018.
  */
 
 
@@ -96,7 +96,7 @@ public class RVAdapterItemProducto extends RecyclerView.Adapter<RVAdapterItemPro
         NumberFormat defaultFormat = NumberFormat.getCurrencyInstance();
 
         customViewHolder.txtNombreProducto.setText(productoModel.getNombreProducto());
-        customViewHolder.txtValorProducto.setText(("$ "+String.format( new Locale("es_CO"),"%,.2f", productoModel.getValorProducto())));
+        customViewHolder.txtValorProducto.setText(("$ "+String.format( "%,.2f", productoModel.getValorProducto())));
 
         customViewHolder.container.setOnClickListener(new View.OnClickListener() {
             @Override

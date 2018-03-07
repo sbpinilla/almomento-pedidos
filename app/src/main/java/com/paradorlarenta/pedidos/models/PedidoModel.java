@@ -6,12 +6,22 @@ package com.paradorlarenta.pedidos.models;
 
 public class PedidoModel {
 
+    private String descripcion;
     private ProductoModel productoModel;
     private Integer cantidad;
 
-    public PedidoModel(ProductoModel productoModel, Integer cantidad) {
+    public PedidoModel(String descripcion, ProductoModel productoModel, Integer cantidad) {
+        this.descripcion = descripcion;
         this.productoModel = productoModel;
         this.cantidad = cantidad;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public ProductoModel getProductoModel() {

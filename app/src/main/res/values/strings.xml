@@ -9,4 +9,8 @@
     <string name="str_search">Buscar</string>
     <string name="search_hint">Buscar producto</string>
     <string name="str_total">Total : </string>
+    <string name="str_descripcion">Descripción ...</string>
+    <string name="str_descripcion2">Descripción</string>
+    <string name="str_confirmar_pedido">Confirmar Pedido</string>
+    <string name="str_cancelar">Quitar</string>
 </resources>

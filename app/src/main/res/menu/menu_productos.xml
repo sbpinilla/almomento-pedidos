@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".DemoActivity">
 
     <item
-        android:id="@+id/menu_pedidos_cancelar"
-        android:icon="@drawable/ic_action_cancel"
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_action_action_search"
         android:orderInCategory="100"
         android:title="@string/str_search"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/menu_pedidos_confirmar"
-        android:icon="@drawable/ic_action_local_printshop"
+        android:id="@+id/menu_carrito_compras"
         android:orderInCategory="101"
-        android:title="@string/str_search"
+        android:title="Carrito Compras"
+        app:actionLayout="@layout/badge_counter"
         app:showAsAction="always"/>
 </menu>

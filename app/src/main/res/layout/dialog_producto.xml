@@ -78,6 +78,20 @@
                 android:layout_height="wrap_content" />
 
         </LinearLayout>
+
+        <EditText
+            android:id="@+id/edt_descripcion_dialog_producto"
+            android:layout_width="match_parent"
+            android:inputType="text"
+            android:background="@drawable/edt_descripcion"
+            android:scrollHorizontally="false"
+            android:scrollbars="vertical"
+            android:minLines="1"
+            android:lines="5"
+            android:hint="@string/str_descripcion"
+            android:textColor="@color/textColor"
+            android:layout_height="wrap_content" />
+
         <Button
             android:id="@+id/btn_agregar_dialog_producto"
             android:layout_width="match_parent"
@@ -85,6 +99,14 @@
             android:layout_height="wrap_content"
             android:textColor="@color/windowBackground"
             android:text="@string/str_agregar"/>
+        <Button
+            android:id="@+id/btn_quitar_dialog_producto"
+            android:layout_width="match_parent"
+            android:theme="@style/PedidosButtonCancelar"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:textColor="@color/windowBackground"
+            android:text="@string/str_cancelar"/>
 
 
     </LinearLayout>

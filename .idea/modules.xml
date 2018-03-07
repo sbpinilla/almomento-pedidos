@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Pedidos.iml" filepath="$PROJECT_DIR$/Pedidos.iml" />
       <module fileurl="file://D:\AndroidStudioProyectos\almomento-pedidos\Pedidos.iml" filepath="D:\AndroidStudioProyectos\almomento-pedidos\Pedidos.iml" />
+      <module fileurl="file://$PROJECT_DIR$/almomento-pedidos.iml" filepath="$PROJECT_DIR$/almomento-pedidos.iml" />
       <module fileurl="file://C:\ProyectaTSP\OtrosProyectos\Pedidos\almomento-pedidos.iml" filepath="C:\ProyectaTSP\OtrosProyectos\Pedidos\almomento-pedidos.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
