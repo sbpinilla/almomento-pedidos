@@ -13,14 +13,20 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.paradorlarenta.pedidos.R;
 import com.paradorlarenta.pedidos.callbacks.CallBackItemPedido;
+import com.paradorlarenta.pedidos.models.FiltroModel;
 import com.paradorlarenta.pedidos.models.PedidoModel;
+import com.shawnlin.numberpicker.NumberPicker;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -163,13 +169,43 @@ public class PedidosActivity extends AppCompatActivity {
 
             //TODO: eNVIAR PEDIDO AL SERVIDOR
 
-            SharedPreferences sharedPref = getSharedPreferences(
-                    "SharedPreferencesPedidos", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString("dataCarrito", "");
-            editor.commit();
 
-            finish();
+            final MaterialDialog dialog = new MaterialDialog.Builder(activity)
+                    .title("Confirmar")
+                    .theme(Theme.LIGHT)
+                    .customView(R.layout.dialog_pedir, true)
+                    .show();
+
+            View view = dialog.getCustomView();
+
+            Button btnPedir = view.findViewById(R.id.btn_confirmar_dialog_pedir);
+            final NumberPicker numberPicker =view.findViewById(R.id.number_picker_dialog_pedir);
+            final EditText edtDescripcion = view.findViewById(R.id.edt_descripcion_dialog_pedir);
+
+
+            btnPedir.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Integer iMesa=numberPicker.getValue();
+                    String descripcion = edtDescripcion.getText().toString();
+
+                    SharedPreferences sharedPref = getSharedPreferences(
+                            "SharedPreferencesPedidos", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString("dataCarrito", "");
+                    editor.commit();
+                    dialog.dismiss();
+
+                    Intent intent = new Intent(activity, FiltrosActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+
+
+
         }
 
         return super.onOptionsItemSelected(item);

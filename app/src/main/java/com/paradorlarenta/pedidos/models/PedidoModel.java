@@ -10,6 +10,9 @@ public class PedidoModel {
     private ProductoModel productoModel;
     private Integer cantidad;
 
+    public PedidoModel() {
+    }
+
     public PedidoModel(String descripcion, ProductoModel productoModel, Integer cantidad) {
         this.descripcion = descripcion;
         this.productoModel = productoModel;

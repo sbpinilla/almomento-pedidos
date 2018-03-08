@@ -25,7 +25,7 @@ public class SplashActivity extends AppCompatActivity {
         public void run() {
 
             //TODO: Validar preferencias en caso que se necesite sesion
-            irPedidos();
+            irFiltros();
 
         }
     };
@@ -50,9 +50,9 @@ public class SplashActivity extends AppCompatActivity {
     }
 
 
-    private void irPedidos() {
+    private void irFiltros() {
 
-        Intent intent = new Intent(SplashActivity.this, ProductosActivity.class);
+        Intent intent = new Intent(SplashActivity.this, FiltrosActivity.class);
         startActivity(intent);
         finish();
     }

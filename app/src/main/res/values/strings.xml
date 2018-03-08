@@ -13,4 +13,7 @@
     <string name="str_descripcion2">Descripción</string>
     <string name="str_confirmar_pedido">Confirmar Pedido</string>
     <string name="str_cancelar">Quitar</string>
+    <string name="str_filtro">Filtro</string>
+    <string name="str_mesa">Mesa</string>
+    <string name="str_pedir">Pedir</string>
 </resources>

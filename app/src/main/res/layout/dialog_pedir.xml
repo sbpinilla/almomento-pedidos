@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_margin="16dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="@string/str_mesa"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/textColor"
+            android:gravity="center"
+            android:layout_marginBottom="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.shawnlin.numberpicker.NumberPicker
+            android:layout_gravity="center"
+            android:id="@+id/number_picker_dialog_pedir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="false"
+            app:np_orientation="horizontal"
+            app:np_width="180dp"
+            app:np_height="64dp"
+            app:np_dividerColor="@color/colorPrimary"
+            app:np_max="20"
+            app:np_min="1"
+            app:np_selectedTextColor="@color/colorPrimary"
+            app:np_textColor="@color/colorAccent"
+            app:np_value="1" />
+
+        <EditText
+            android:id="@+id/edt_descripcion_dialog_pedir"
+            android:layout_width="match_parent"
+            android:inputType="text"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/edt_descripcion"
+            android:scrollHorizontally="false"
+            android:scrollbars="vertical"
+            android:minLines="1"
+            android:lines="5"
+            android:hint="@string/str_descripcion"
+            android:textColor="@color/textColor"
+            android:layout_height="wrap_content" />
+        
+        <Button
+            android:text="@string/str_pedir"
+            android:theme="@style/PedidosButton"
+            android:textColor="@color/windowBackground"
+            android:id="@+id/btn_confirmar_dialog_pedir"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

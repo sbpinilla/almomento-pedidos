@@ -12,6 +12,9 @@ public class ProductoModel {
     private String urlImage;
 
 
+    public ProductoModel() {
+    }
+
     public ProductoModel(Integer idProducto, String nombreProducto, Double valorProducto, String urlImage) {
         this.idProducto = idProducto;
         this.nombreProducto = nombreProducto;

@@ -3,7 +3,7 @@ package com.paradorlarenta.pedidos.callbacks;
 import com.paradorlarenta.pedidos.models.ProductoModel;
 
 /**
- * Created by Nelsy Acuña on 05/03/2018.
+ * Created by INFO24 on 5/03/2018.
  */
 
 public interface CallBackItemProducto {

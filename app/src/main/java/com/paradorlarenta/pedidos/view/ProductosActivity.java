@@ -64,7 +64,7 @@ public class ProductosActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         activity = this;
         productoModelList = new ArrayList<>();
-        setupToolbar(strTitulos);
+        setupToolbar(strTitulos,true);
         setupRVProductos();
         setupSearchView();
 
@@ -131,11 +131,11 @@ public class ProductosActivity extends AppCompatActivity {
 
     }
 
-    public void setupToolbar(String tittle) {
+    public void setupToolbar(String tittle, Boolean b) {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(tittle);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(b);
 
     }
 
