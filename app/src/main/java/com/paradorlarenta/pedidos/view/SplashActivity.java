@@ -1,7 +1,9 @@
 package com.paradorlarenta.pedidos.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -40,8 +42,19 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
 
+        setupConexion();
+
         fullScreen();
         ejecutarTimer();
+    }
+
+    private void setupConexion() {
+
+        SharedPreferences sharedPref = getSharedPreferences(
+                "SharedPreferencesPedidos", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("apiIP", "192.168.1.33");
+        editor.commit();
     }
 
 

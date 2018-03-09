@@ -7,11 +7,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.paradorlarenta.pedidos.R;
 import com.paradorlarenta.pedidos.callbacks.CallBackItemFiltro;
 import com.paradorlarenta.pedidos.models.FiltroModel;
+import com.squareup.picasso.Picasso;
+
 
 import java.util.List;
 
@@ -46,6 +49,10 @@ public class RVAdapterItemFiltro extends RecyclerView.Adapter<RVAdapterItemFiltr
         @BindView(R.id.card_container_item_filtro)
         CardView container;
 
+        @BindView(R.id.img_filtro_activity_filtro)
+        ImageView imgFiltro;
+
+
         public FiltrosViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
@@ -73,6 +80,10 @@ public class RVAdapterItemFiltro extends RecyclerView.Adapter<RVAdapterItemFiltr
 
         final FiltroModel filtroModel = filtroModelList.get(position);
 
+        Picasso.with(mContext)
+                .load(filtroModel.getUrlFiltro())
+                .placeholder(R.drawable.base)
+                .into(holder.imgFiltro);
 
         holder.txtNombreFiltro.setText(filtroModel.getNombreFiltro());
 

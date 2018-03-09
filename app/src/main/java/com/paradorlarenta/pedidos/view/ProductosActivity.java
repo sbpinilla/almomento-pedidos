@@ -22,6 +22,8 @@ import com.afollestad.materialdialogs.Theme;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.paradorlarenta.pedidos.R;
 import com.paradorlarenta.pedidos.callbacks.CallBackItemProducto;
+import com.paradorlarenta.pedidos.conexion.ApiUtils;
+import com.paradorlarenta.pedidos.conexion.SOService;
 import com.paradorlarenta.pedidos.models.PedidoModel;
 import com.paradorlarenta.pedidos.models.ProductoModel;
 import com.github.juanlabrador.badgecounter.BadgeCounter;
@@ -35,6 +37,9 @@ import java.util.List;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProductosActivity extends AppCompatActivity {
 
@@ -42,6 +47,7 @@ public class ProductosActivity extends AppCompatActivity {
     private RVAdapterItemProducto adapter;
     private List<ProductoModel> productoModelList;
     private Activity activity;
+    private SOService apiService;
 
     @BindView(R.id.tool_bar)
     Toolbar toolbar;
@@ -62,6 +68,12 @@ public class ProductosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_productos);
         ButterKnife.bind(this);
+
+        SharedPreferences sharedPref = getSharedPreferences(
+                "SharedPreferencesPedidos", Context.MODE_PRIVATE);
+        String apiIP = sharedPref.getString("apiIP", "");
+        apiService = ApiUtils.getSOService(apiIP);
+
         activity = this;
         productoModelList = new ArrayList<>();
         setupToolbar(strTitulos,true);
@@ -370,7 +382,31 @@ public class ProductosActivity extends AppCompatActivity {
     private void updateListProductosModel() {
 
 
-        List<ProductoModel> lisTem = new ArrayList<>();
+        SharedPreferences sharedPref = getSharedPreferences(
+                "SharedPreferencesPedidos", Context.MODE_PRIVATE);
+        String filtro = sharedPref.getString("filtro", "");
+
+
+        apiService.ApiGetProductos(filtro).enqueue(new Callback<List<ProductoModel>>() {
+            @Override
+            public void onResponse(Call<List<ProductoModel>> call, Response<List<ProductoModel>> response) {
+                Log.d(LOG_ACTIVITY,"isSuccessful");
+
+                productoModelList = new ArrayList<>();
+                productoModelList = response.body();
+
+                Log.d(LOG_ACTIVITY,"productoModelList.size():"+productoModelList.size());
+
+                adapter.updateRVAdapterItemProducto(productoModelList);
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductoModel>> call, Throwable t) {
+                Log.d(LOG_ACTIVITY,"onFailure: "+t.getMessage());
+            }
+        });
+
+      /*  List<ProductoModel> lisTem = new ArrayList<>();
         productoModelList = new ArrayList<>();
         ProductoModel pm1 = new ProductoModel(1, "Producto 1", 20000.0, "");
         ProductoModel pm2 = new ProductoModel(2, "Producto 2", 10000.0, "");
@@ -386,6 +422,7 @@ public class ProductosActivity extends AppCompatActivity {
 
         productoModelList = lisTem;
         adapter.updateRVAdapterItemProducto(lisTem);
+        */
 
     }
 
