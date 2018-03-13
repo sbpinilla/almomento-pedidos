@@ -11,11 +11,13 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -24,8 +26,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.paradorlarenta.pedidos.R;
 import com.paradorlarenta.pedidos.callbacks.CallBackItemPedido;
+import com.paradorlarenta.pedidos.conexion.ApiUtils;
+import com.paradorlarenta.pedidos.conexion.SOService;
 import com.paradorlarenta.pedidos.models.FiltroModel;
 import com.paradorlarenta.pedidos.models.PedidoModel;
+import com.paradorlarenta.pedidos.models.RegistrarModel;
 import com.shawnlin.numberpicker.NumberPicker;
 
 import java.lang.reflect.Type;
@@ -34,6 +39,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PedidosActivity extends AppCompatActivity {
 
@@ -43,6 +51,8 @@ public class PedidosActivity extends AppCompatActivity {
     private List<PedidoModel> pedidoModelList;
     private Activity activity;
     private Double dTotal;
+    private SOService apiService;
+    private MaterialDialog  mProgress;
 
     @BindView(R.id.tool_bar)
     Toolbar toolbar;
@@ -56,9 +66,25 @@ public class PedidosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pedidos);
         ButterKnife.bind(this);
         activity = this;
+
+        SharedPreferences sharedPref = getSharedPreferences(
+                "SharedPreferencesPedidos", Context.MODE_PRIVATE);
+        String apiIP = sharedPref.getString("apiIP", "");
+        apiService = ApiUtils.getSOService(apiIP);
+
         setupToolbar("",true);
         setupDataList();
         setupRVPedidos();
+
+    }
+
+    private void initDialog() {
+
+        mProgress =  new MaterialDialog.Builder(activity)
+                .title("Registrando")
+                .content("")
+                .progress(true, 0)
+                .progressIndeterminateStyle(true).show();
     }
 
     private void setupRVPedidos() {
@@ -190,17 +216,60 @@ public class PedidosActivity extends AppCompatActivity {
                     Integer iMesa=numberPicker.getValue();
                     String descripcion = edtDescripcion.getText().toString();
 
-                    SharedPreferences sharedPref = getSharedPreferences(
+                    final SharedPreferences sharedPref = getSharedPreferences(
                             "SharedPreferencesPedidos", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putString("dataCarrito", "");
-                    editor.commit();
-                    dialog.dismiss();
+                    Gson gson = new Gson();
+                    String dataCarrito = sharedPref.getString("dataCarrito", "");
+                    Type type = new TypeToken<List<PedidoModel>>() {
+                    }.getType();
+                    List<PedidoModel> pedidoModels = gson.fromJson(dataCarrito, type);
 
-                    Intent intent = new Intent(activity, FiltrosActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    finish();
+                    if(pedidoModels.size() !=0){
+
+                        RegistrarModel registrarModel = new RegistrarModel();
+                        registrarModel.setMesa(iMesa);
+                        registrarModel.setDescripcion(descripcion);
+                        registrarModel.setListPedidos(pedidoModels);
+                        registrarModel.setTotal(dTotal.toString());
+
+                        dialog.dismiss();
+                        initDialog();
+                        apiService.ApiRegistrarPedido(registrarModel).enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                mProgress.dismiss();
+
+                                Log.d(LOG_ACTIVITY,"onResponse");
+
+                                SharedPreferences.Editor editor = sharedPref.edit();
+                                editor.putString("dataCarrito", "");
+                                editor.commit();
+
+                                Toast.makeText(getBaseContext(),"Pedido Registrado !",Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(activity, FiltrosActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
+
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<Void> call, Throwable t) {
+                                mProgress.dismiss();
+                                Log.d(LOG_ACTIVITY,"onFailure");
+                                Toast.makeText(getBaseContext(),"So se pudo registrar el pedido !",Toast.LENGTH_LONG).show();
+
+                            }
+                        });
+
+                    }else{
+                        // no hay productos en el pedido
+                        dialog.dismiss();
+                        Toast.makeText(getBaseContext(),"No hay productos en el pedido",Toast.LENGTH_LONG).show();
+                    }
+
+
                 }
             });
 

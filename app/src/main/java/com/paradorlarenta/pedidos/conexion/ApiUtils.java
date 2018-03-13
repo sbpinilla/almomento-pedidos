@@ -6,7 +6,7 @@ import android.util.Log;
 import com.mancj.materialsearchbar.adapter.DefaultSuggestionsAdapter;
 
 /**
- * Created by Sergio on 25/10/2017.
+ * Created by INFO24 on 8/03/2018.
  */
 
 public class ApiUtils {
@@ -18,12 +18,13 @@ public class ApiUtils {
 
     public static final String GET_FILTROS = "getFiltros.php";
     public static final String GET_PRODUCTOS = "getProductos.php";
+    public static final String POST_REGISTRAR = "registrarPedido.php";
 
     public static SOService getSOService(String ip) {
 
         Log.d("SOService","http://"+ip+"/pedidos/");
 
-        return RetrofitClient.getClient("http://"+ip+":8082/pedidos/").create(SOService.class);
+        return RetrofitClient.getClient("http://"+ip+"/pedidos/").create(SOService.class);
     }
 
 

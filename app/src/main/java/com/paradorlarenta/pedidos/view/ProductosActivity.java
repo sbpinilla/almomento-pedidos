@@ -195,7 +195,7 @@ public class ProductosActivity extends AppCompatActivity {
                     Boolean existe = false;
                     PedidoModel pedidoModel = null;
                     for (PedidoModel pm : pedidoModels) {
-                        if (pm.getProductoModel().getIdProducto() == productoModel.getIdProducto()) {
+                        if (pm.getProductoModel().getIdProducto() .equals(productoModel.getIdProducto()) ) {
                             existe = true;
                             pedidoModel = pm;
 
@@ -241,7 +241,7 @@ public class ProductosActivity extends AppCompatActivity {
 
                         PedidoModel pmm = null ;
                         for (PedidoModel pm : pedidoModels) {
-                            if (pm.getProductoModel().getIdProducto() == productoModel.getIdProducto()) {
+                            if (pm.getProductoModel().getIdProducto() .equals(productoModel.getIdProducto()) ) {
 
                                 pmm = pm;
                             }
@@ -326,7 +326,7 @@ public class ProductosActivity extends AppCompatActivity {
                             Boolean existe = false;
                             PedidoModel productoModel1 = null;
                             for (PedidoModel pm : pedidoModels) {
-                                if (pm.getProductoModel().getIdProducto() == productoModel.getIdProducto()) {
+                                if (pm.getProductoModel().getIdProducto().equals(productoModel.getIdProducto())) {
                                     existe = true;
                                     productoModel1 = pm;
 
@@ -402,6 +402,7 @@ public class ProductosActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<ProductoModel>> call, Throwable t) {
+
                 Log.d(LOG_ACTIVITY,"onFailure: "+t.getMessage());
             }
         });

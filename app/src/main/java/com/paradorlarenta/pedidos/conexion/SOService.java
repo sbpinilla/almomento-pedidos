@@ -3,6 +3,7 @@ package com.paradorlarenta.pedidos.conexion;
 
 import com.paradorlarenta.pedidos.models.FiltroModel;
 import com.paradorlarenta.pedidos.models.ProductoModel;
+import com.paradorlarenta.pedidos.models.RegistrarModel;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
- * Created by Sergio on 25/10/2017.
+ * Created by INFO24 on  8/03/2018.
  */
 
 public interface SOService {
@@ -33,6 +34,8 @@ public interface SOService {
     @GET(ApiUtils.GET_PRODUCTOS)
     Call<List<ProductoModel>> ApiGetProductos(@Query("filtro") String filtro);
 
+    @POST(ApiUtils.POST_REGISTRAR)
+    Call<Void>ApiRegistrarPedido (@Body RegistrarModel registrarModel );
 
 
     /*

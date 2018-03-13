@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 public class SplashActivity extends AppCompatActivity {
 
     private static final String LOG_ACTIVITY = "ActivitySplash";
-    private static final int SPLASH_TIMEOUT = 3000;
+    private static final int SPLASH_TIMEOUT = 1000;
     private Activity activity;
 
     Handler mHandler = new Handler();
@@ -53,7 +53,7 @@ public class SplashActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences(
                 "SharedPreferencesPedidos", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("apiIP", "192.168.1.33");
+        editor.putString("apiIP", "192.168.1.33:8082");
         editor.commit();
     }
 
